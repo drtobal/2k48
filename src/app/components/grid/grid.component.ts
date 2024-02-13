@@ -1,12 +1,13 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Inject, PLATFORM_ID } from '@angular/core';
 import { DEFAULT_GRID_SIZE } from '../../constants';
 import { GridService } from '../../services/grid/grid.service';
-import { Grid } from '../../types';
+import { Grid, MoveDirection } from '../../types';
 
 @Component({
   selector: 'app-grid',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './grid.component.html',
   styleUrl: './grid.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,11 +20,16 @@ export class GridComponent {
   /** component constructor */
   constructor(
     private gridService: GridService,
+    @Inject(PLATFORM_ID) platformId: string,
   ) {
-    this.grid = this.gridService.newGrid(DEFAULT_GRID_SIZE);
-    this.grid = this.gridService.addNewTile(this.grid);
-    this.grid = this.gridService.addNewTile(this.grid);
+    if (isPlatformBrowser(platformId)) {
+      this.grid = this.gridService.addNewTile(this.gridService.addNewTile(this.gridService.newGrid(DEFAULT_GRID_SIZE)));
 
-    console.log(this.grid);
+      console.log(this.grid);
+    }
+  }
+
+  move(direction: MoveDirection): void {
+    this.grid = this.gridService.moveTile(this.grid, direction);
   }
 }

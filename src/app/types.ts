@@ -3,11 +3,18 @@ export type Coords2D = {
     y: number;
 };
 
-export type Tile = {
-    coords: Coords2D;
+export interface Tile extends Coords2D {
     value: number;
+    mergedFrom?: [Coords2D, Coords2D] | null;
 };
+
+export type MoveDirection = 'up' | 'down' | 'left' | 'right';
 
 export type GridTile = Tile | null;
 
 export type Grid = GridTile[][];
+
+export type Traversals = {
+    x: number[],
+    y: number[],
+};

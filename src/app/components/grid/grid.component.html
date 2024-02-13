@@ -1,1 +1,19 @@
-<p>grid works!</p>
+<div style="display: flex; gap: 0.25rem">
+    @for (column of grid; track $index) {
+    <div style="display: flex; flex-direction: column; gap: 0.25rem">
+        @for (cell of column; track $index) {
+        <div style="width: 2rem;height: 2rem;border: 1px solid black">
+            {{cell ? cell.value : '-'}}
+        </div>
+        }
+    </div>
+    }
+</div>
+
+
+<button (click)="move('left')">left</button>
+<button (click)="move('right')">right</button>
+<button (click)="move('up')">up</button>
+<button (click)="move('down')">down</button>
+
+{{grid | json}}
