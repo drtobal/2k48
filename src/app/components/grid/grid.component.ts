@@ -1,5 +1,5 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Inject, PLATFORM_ID } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, PLATFORM_ID } from '@angular/core';
 import { DEFAULT_GRID_SIZE } from '../../constants';
 import { GridService } from '../../services/grid/grid.service';
 import { UtilService } from '../../services/util/util.service';
@@ -25,21 +25,33 @@ export class GridComponent {
   /** component constructor */
   constructor(
     private gridService: GridService,
+    private changeDetectorRef: ChangeDetectorRef,
     @Inject(PLATFORM_ID) platformId: string,
   ) {
     if (isPlatformBrowser(platformId)) {
       this.gridBg = this.gridService.newGrid(DEFAULT_GRID_SIZE);
-      this.setGrid(this.gridService.addNewTile(this.gridService.addNewTile(UtilService.deepClone(this.gridBg))));
-      console.log(this.grid);
+      this.grid = this.gridService.addNewTile(this.gridService.addNewTile(UtilService.deepClone(this.gridBg)));
+      this.flatGrid = this.gridService.flatGrid(this.grid);
     }
   }
 
   move(direction: MoveDirection): void {
-    this.setGrid(this.gridService.moveTile(this.grid, direction));
+    const result = this.gridService.moveTile(this.grid, direction);
+    if (result.changed) {
+      this.grid = result.grid;
+      this.flatGrid = this.gridService.overrideFlatGrid(this.flatGrid, result.movements);
+      this.changeDetectorRef.detectChanges();
+      setTimeout(() => {
+        this.flatGrid = this.gridService.flatGrid(this.grid);
+        this.changeDetectorRef.detectChanges();
+      }, 250);
+    }
   }
 
-  setGrid(grid: Grid): void {
-    this.grid = grid;
-    this.flatGrid = this.gridService.flatGrid(this.grid);
+  setFlatGridWithDelay(flatGrid: Tile[], time: number): void {
+    setTimeout(() => {
+      this.flatGrid = flatGrid;
+      this.changeDetectorRef.detectChanges();
+    }, time);
   }
 }

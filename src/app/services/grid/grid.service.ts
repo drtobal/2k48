@@ -28,6 +28,7 @@ export class GridService {
         ...tile,
         id: UtilService.id(),
         value: this.getRandom(DEFAULT_NEW_TILE),
+        isNew: true,
       };
     }
     return grid;
@@ -63,11 +64,13 @@ export class GridService {
     }
   }
 
-  moveTile(grid: Grid, direction: MoveDirection): Grid {
+  moveTile(grid: Grid, direction: MoveDirection): { grid: Grid, movements: Tile[], changed: boolean } {
     let moved: boolean = false;
+    let changed: boolean = false;
     const gridSize = grid.length;
     const vector = this.getVectorDirection(direction);
     const traversals = this.buildTraversals(vector, gridSize);
+    const movements: Tile[] = [];
 
     grid = this.clearMoveInformation(grid);
 
@@ -82,7 +85,9 @@ export class GridService {
           if (positions.next && positions.next.value === tile.value && !positions.next.mergedFrom) {
             const merged: Tile = {
               ...positions.next,
+              id: UtilService.id(),
               value: tile.value * 2,
+              isNew: true,
               mergedFrom: [tile, positions.next],
             };
 
@@ -90,6 +95,7 @@ export class GridService {
             grid[merged.x][merged.y] = merged;
             tile.x = positions.next.x;
             tile.y = positions.next.y;
+            movements.push(positions.next);
 
             // here check the score and check if game is won
           } else { // move tile
@@ -98,6 +104,8 @@ export class GridService {
             tile.y = positions.farthest.y;
             grid[tile.x][tile.y] = tile;
           }
+
+          movements.push(tile);
 
           if (coords.x !== tile.x || coords.y !== tile.y) {
             moved = true;
@@ -108,10 +116,11 @@ export class GridService {
 
     if (moved) {
       grid = this.addNewTile(grid);
+      changed = true;
       // check game over if there are no more free tiles
     }
 
-    return grid;
+    return { grid, movements, changed };
   }
 
   clearMoveInformation(grid: Grid): Grid {
@@ -120,6 +129,7 @@ export class GridService {
       for (let y = 0; y < size; y++) {
         if (grid[x][y]) {
           grid[x][y]!.mergedFrom = null;
+          grid[x][y]!.isNew = false;
         }
       }
     }
@@ -180,5 +190,17 @@ export class GridService {
       }
     }
     return tiles;
+  }
+
+  overrideFlatGrid(old: Tile[], current: Tile[]): Tile[] {
+    const oldLength = old.length;
+    for (let x = 0; x < oldLength; x++) {
+      const tile = current.find(t => t.id === old[x].id);
+      if (tile) {
+        old[x].x = tile.x;
+        old[x].y = tile.y;
+      }      
+    }
+    return old;
   }
 }

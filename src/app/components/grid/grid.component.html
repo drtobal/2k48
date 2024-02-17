@@ -11,7 +11,9 @@
 
     <div class="grid-game">
         @for (tile of flatGrid; track tile.id) {
-        <div class="tile position-{{tile.x}}-{{tile.y}} value-{{tile.value}}">{{ tile.value }}</div>
+        <div [ngClass]="{'is-new': tile.isNew}" class="tile position-{{tile.x}}-{{tile.y}} value-{{tile.value}}">
+            {{ tile.value }}
+        </div>
         }
     </div>
 </div>

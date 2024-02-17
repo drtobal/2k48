@@ -12,11 +12,9 @@ export class UtilService {
     return JSON.parse(JSON.stringify(obj));
   }
 
-  /** uuid is only available in localhost, 127.0.0.1 or https context, for demo reasons will use custom id generator */
   static id(): string {
-    return '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, (c: any) => {
-      console.log(c);
-      return (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16);
-    });
+    return '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, (c: any) =>
+      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    );
   }
 }

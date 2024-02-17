@@ -73,7 +73,12 @@ $colors: (
     align-items: center;
     justify-content: center;
     font-size: 2rem;
-    transition: transition_standard(all);
+    transition: transition_standard(all, 250ms);
+    color: #0f172a;
+
+    &.is-new {
+        animation: spawn $transition-duration-entering $deceleration-curve-timing-function;
+    }
 }
 
 .grid-game {
@@ -100,5 +105,25 @@ $colors: (
                 background-color: $color;
             }
         }
+    }
+}
+
+@keyframes spawn {
+    0% {
+        opacity: 0.25;
+        transform: scale(1, 1);
+    }
+    25% {
+        transform: scale(0.9, 1.1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1, 0.9);
+    }
+    75% {
+        transform: scale(0.95, 1.05);
+    }
+    100% {
+        transform: scale(1, 1);
     }
 }
