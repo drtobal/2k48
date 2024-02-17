@@ -4,6 +4,7 @@ export type Coords2D = {
 };
 
 export interface Tile extends Coords2D {
+    id: string;
     value: number;
     mergedFrom?: [Coords2D, Coords2D] | null;
 };

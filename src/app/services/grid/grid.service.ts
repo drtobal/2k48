@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DEFAULT_NEW_TILE } from '../../constants';
 import { Coords2D, Grid, GridTile, MoveDirection, Tile, Traversals } from '../../types';
+import { UtilService } from '../util/util.service';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,7 @@ export class GridService {
       const tile = this.getRandom(freeTiles);
       grid[tile.x][tile.y] = {
         ...tile,
+        id: UtilService.id(),
         value: this.getRandom(DEFAULT_NEW_TILE),
       };
     }
@@ -167,5 +169,16 @@ export class GridService {
     if (vector.y === 1) traversals.y = traversals.y.reverse();
 
     return traversals;
+  }
+
+  flatGrid(grid: Grid): Tile[] {
+    const tiles: Tile[] = [];
+    const size = grid.length;
+    for (let x = 0; x < size; x++) {
+      for (let y = 0; y < size; y++) {
+        grid[x][y] && tiles.push(grid[x][y]!);
+      }
+    }
+    return tiles;
   }
 }

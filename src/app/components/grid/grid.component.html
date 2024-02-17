@@ -1,3 +1,21 @@
+<div class="grid-container">
+    <div class="grid-bg">
+        @for (column of gridBg; track $index) {
+        <div class="column">
+            @for (tile of column; track $index) {
+            <div class="tile"></div>
+            }
+        </div>
+        }
+    </div>
+
+    <div class="grid-game">
+        @for (tile of flatGrid; track tile.id) {
+        <div class="tile position-{{tile.x}}-{{tile.y}} value-{{tile.value}}">{{ tile.value }}</div>
+        }
+    </div>
+</div>
+
 <div style="display: flex; gap: 0.25rem">
     @for (column of grid; track $index) {
     <div style="display: flex; flex-direction: column; gap: 0.25rem">

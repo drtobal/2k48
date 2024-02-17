@@ -2,7 +2,8 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Inject, PLATFORM_ID } from '@angular/core';
 import { DEFAULT_GRID_SIZE } from '../../constants';
 import { GridService } from '../../services/grid/grid.service';
-import { Grid, MoveDirection } from '../../types';
+import { UtilService } from '../../services/util/util.service';
+import { Grid, MoveDirection, Tile } from '../../types';
 
 @Component({
   selector: 'app-grid',
@@ -17,19 +18,28 @@ export class GridComponent {
 
   grid: Grid = [];
 
+  gridBg: Grid = [];
+
+  flatGrid: Tile[] = [];
+
   /** component constructor */
   constructor(
     private gridService: GridService,
     @Inject(PLATFORM_ID) platformId: string,
   ) {
     if (isPlatformBrowser(platformId)) {
-      this.grid = this.gridService.addNewTile(this.gridService.addNewTile(this.gridService.newGrid(DEFAULT_GRID_SIZE)));
-
+      this.gridBg = this.gridService.newGrid(DEFAULT_GRID_SIZE);
+      this.setGrid(this.gridService.addNewTile(this.gridService.addNewTile(UtilService.deepClone(this.gridBg))));
       console.log(this.grid);
     }
   }
 
   move(direction: MoveDirection): void {
-    this.grid = this.gridService.moveTile(this.grid, direction);
+    this.setGrid(this.gridService.moveTile(this.grid, direction));
+  }
+
+  setGrid(grid: Grid): void {
+    this.grid = grid;
+    this.flatGrid = this.gridService.flatGrid(this.grid);
   }
 }
