@@ -32,7 +32,7 @@ export class GridComponent implements OnInit, OnDestroy {
   flatGrid: Tile[] = [];
 
   /** check if is game over */
-  gameOver: boolean = true;
+  gameOver: boolean = false;
 
   /** detach window.document event */
   detachEvents: (() => void) | null = null;
