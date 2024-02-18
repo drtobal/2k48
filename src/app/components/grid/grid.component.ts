@@ -72,6 +72,7 @@ export class GridComponent implements OnInit, OnDestroy {
     this.flatGrid = this.gridService.flatGrid(this.grid);
     this.best = this.scoreService.getBestScore();
     this.gameOver = false;
+    this.score = 0;
   }
 
   /** apply movement for tiles */
