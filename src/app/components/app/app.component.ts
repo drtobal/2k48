@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { GridComponent } from '../grid/grid.component';
 import { FooterComponent } from '../footer/footer.component';
 
+/** main component of the app */
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -12,5 +13,4 @@ import { FooterComponent } from '../footer/footer.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  title = '2k48';
 }

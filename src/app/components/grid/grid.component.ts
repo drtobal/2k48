@@ -6,6 +6,7 @@ import { ScoreService } from '../../services/score/score.service';
 import { UtilService } from '../../services/util/util.service';
 import { Grid, MoveDirection, Tile } from '../../types';
 
+/** contains the grid for a game and controls */
 @Component({
   selector: 'app-grid',
   standalone: true,
@@ -15,18 +16,25 @@ import { Grid, MoveDirection, Tile } from '../../types';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GridComponent implements OnInit, OnDestroy {
+  /** current game score */
   score: number = 0;
 
+  /** best score value */
   best: number = 0;
 
+  /** playing grid */
   grid: Grid = [];
 
+  /** dummy grid to draw a background */
   gridBg: Grid = [];
 
+  /** displayed grid, use a flat grid to enable tile animations */
   flatGrid: Tile[] = [];
 
+  /** check if is game over */
   gameOver: boolean = true;
 
+  /** detach window.document event */
   detachEvents: (() => void) | null = null;
 
   /** component constructor */
@@ -42,6 +50,7 @@ export class GridComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** generate event listeners */
   ngOnInit(): void {
     const action = (event: KeyboardEvent) => this.action(event);
     this.document.addEventListener('keydown', action);
@@ -51,10 +60,12 @@ export class GridComponent implements OnInit, OnDestroy {
     };
   }
 
+  /** clean up */
   ngOnDestroy(): void {
     this.detachEvents && this.detachEvents();
   }
 
+  /** start a new game */
   newGame(): void {
     this.gridBg = this.gridService.newGrid(DEFAULT_GRID_SIZE);
     this.grid = this.gridService.addNewTile(this.gridService.addNewTile(UtilService.deepClone(this.gridBg)));
@@ -63,6 +74,7 @@ export class GridComponent implements OnInit, OnDestroy {
     this.gameOver = false;
   }
 
+  /** apply movement for tiles */
   move(direction: MoveDirection): void {
     const result = this.gridService.moveTile(this.grid, direction);
     if (result.changed) {
@@ -79,6 +91,7 @@ export class GridComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** keyboard action to apply a movement */
   action(event: KeyboardEvent): void {
     switch (event.code) {
       case 'ArrowUp':
@@ -100,6 +113,7 @@ export class GridComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** set flat grid after some time to sync animations */
   setFlatGridWithDelay(flatGrid: Tile[], time: number): void {
     setTimeout(() => {
       this.flatGrid = flatGrid;
@@ -107,6 +121,7 @@ export class GridComponent implements OnInit, OnDestroy {
     }, time);
   }
 
+  /** check if the game is over */
   checkGameOver(): void {
     this.gameOver = this.gridService.freeTiles(this.grid).length === 0 && !this.gridService.hasMergesAvailable(this.grid);
   }

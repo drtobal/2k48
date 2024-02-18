@@ -5,6 +5,7 @@ import { BEST_SCORE_LS } from '../../constants';
   providedIn: 'root'
 })
 export class ScoreService {
+  /** ge best score from localstorage */
   getBestScore(): number {
     if (typeof window !== 'undefined') {
       const data = Number(window.localStorage.getItem(BEST_SCORE_LS));
@@ -15,6 +16,7 @@ export class ScoreService {
     return 0;
   }
 
+  /** save best score in localstorage, only if it's higher than saved */
   saveBestScore(score: number): void {
     if (typeof window !== 'undefined') {
       if (this.getBestScore() < score) {

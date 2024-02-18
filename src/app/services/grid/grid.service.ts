@@ -7,7 +7,7 @@ import { UtilService } from '../util/util.service';
   providedIn: 'root'
 })
 export class GridService {
-
+  /** generate a new empty grid */
   newGrid(size: number): Grid {
     const grid: Grid = [];
     for (let x = 0; x < size; x++) {
@@ -20,6 +20,7 @@ export class GridService {
     return grid;
   }
 
+  /** add a new tile in a random empty space */
   addNewTile(grid: Grid): Grid {
     const freeTiles = this.freeTiles(grid);
     if (freeTiles.length > 0) {
@@ -34,6 +35,7 @@ export class GridService {
     return grid;
   }
 
+  /** returns a random element in array */
   getRandom<T>(arr: T[]): T {
     const length = arr.length;
     if (length <= 1) return arr[0];
@@ -41,6 +43,7 @@ export class GridService {
     return arr[Math.floor(Math.random() * length)];
   }
 
+  /** get free tiles of the grid */
   freeTiles(grid: Grid): Coords2D[] {
     const emptyTiles: Coords2D[] = [];
     this.forTiles(grid, (x, y, tile) => {
@@ -51,6 +54,7 @@ export class GridService {
     return emptyTiles;
   }
 
+  /** apply a function for every tile in grid */
   forTiles(grid: Grid, cb: (x: number, y: number, tile: GridTile) => void): void {
     const gridSize = grid.length; // grids should always be squares
     for (let x = 0; x < gridSize; x++) {
@@ -60,6 +64,7 @@ export class GridService {
     }
   }
 
+  /** move all tiles in a grid, and merge tiles with same value, also generate a score value of the movement */
   moveTile(grid: Grid, direction: MoveDirection): { grid: Grid, movements: Tile[], changed: boolean, score: number } {
     let moved: boolean = false;
     let changed: boolean = false;
@@ -119,6 +124,7 @@ export class GridService {
     return { grid, movements, changed, score };
   }
 
+  /** clear last move information of tiles, this is useful for animatons */
   clearMoveInformation(grid: Grid): Grid {
     const size = grid.length;
     for (let x = 0; x < size; x++) {
@@ -132,6 +138,7 @@ export class GridService {
     return grid;
   }
 
+  /** generate a vector value for every direction to apply tile movements */
   getVectorDirection(direction: MoveDirection): Coords2D {
     switch (direction) {
       case 'down': return { x: 0, y: 1 };
@@ -141,6 +148,7 @@ export class GridService {
     }
   }
 
+  /** get farthest available position for tile movement */
   findFarthestPosition(coords: Coords2D, vector: Coords2D, grid: Grid): { farthest: Coords2D, next: GridTile } {
     const gridSize = grid.length;
     let previous: Coords2D;
@@ -158,10 +166,12 @@ export class GridService {
     };
   }
 
+  /** check if position is in bounds of the grid */
   withinBounds(position: Coords2D, size: number): boolean {
     return position.x >= 0 && position.x < size && position.y >= 0 && position.y < size;
   }
 
+  /** genearte positions to iterate grid */
   buildTraversals(vector: Coords2D, size: number): Traversals {
     const traversals: Traversals = { x: [], y: [] };
 
@@ -177,6 +187,7 @@ export class GridService {
     return traversals;
   }
 
+  /** generate a flat grid, this is only used in view */
   flatGrid(grid: Grid): Tile[] {
     const tiles: Tile[] = [];
     const size = grid.length;
@@ -188,6 +199,7 @@ export class GridService {
     return tiles;
   }
 
+  /** override current tiles of a flat grid, this is used to make right animations */
   overrideFlatGrid(old: Tile[], current: Tile[]): Tile[] {
     const oldLength = old.length;
     for (let x = 0; x < oldLength; x++) {
@@ -200,6 +212,7 @@ export class GridService {
     return old;
   }
 
+  /** check if there is any valid merge in current grid */
   hasMergesAvailable(grid: Grid): boolean {
     const size = grid.length;
     for (let x = 0; x < size; x++) {
