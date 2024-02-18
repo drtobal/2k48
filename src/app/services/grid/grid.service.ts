@@ -41,10 +41,6 @@ export class GridService {
     return arr[Math.floor(Math.random() * length)];
   }
 
-  // getRandomInRange(max: number, min: number = 0) {
-  //   return Math.random() * (max - min) + min;
-  // }
-
   freeTiles(grid: Grid): Coords2D[] {
     const emptyTiles: Coords2D[] = [];
     this.forTiles(grid, (x, y, tile) => {
@@ -64,9 +60,10 @@ export class GridService {
     }
   }
 
-  moveTile(grid: Grid, direction: MoveDirection): { grid: Grid, movements: Tile[], changed: boolean } {
+  moveTile(grid: Grid, direction: MoveDirection): { grid: Grid, movements: Tile[], changed: boolean, score: number } {
     let moved: boolean = false;
     let changed: boolean = false;
+    let score: number = 0;
     const gridSize = grid.length;
     const vector = this.getVectorDirection(direction);
     const traversals = this.buildTraversals(vector, gridSize);
@@ -97,7 +94,7 @@ export class GridService {
             tile.y = positions.next.y;
             movements.push(positions.next);
 
-            // here check the score and check if game is won
+            score += merged.value;
           } else { // move tile
             grid[tile.x][tile.y] = null;
             tile.x = positions.farthest.x;
@@ -117,10 +114,9 @@ export class GridService {
     if (moved) {
       grid = this.addNewTile(grid);
       changed = true;
-      // check game over if there are no more free tiles
     }
 
-    return { grid, movements, changed };
+    return { grid, movements, changed, score };
   }
 
   clearMoveInformation(grid: Grid): Grid {
@@ -199,8 +195,31 @@ export class GridService {
       if (tile) {
         old[x].x = tile.x;
         old[x].y = tile.y;
-      }      
+      }
     }
     return old;
+  }
+
+  hasMergesAvailable(grid: Grid): boolean {
+    const size = grid.length;
+    for (let x = 0; x < size; x++) {
+      for (let y = 0; y < size; y++) {
+        const tile = grid[x][y];
+        if (tile) {
+          const directions: MoveDirection[] = ['up', 'left', 'down', 'right'];
+          for (let z = 0; z < 4; z++) {
+            const vector = this.getVectorDirection(directions[z]);
+            if (grid[x + vector.x]) {
+              const other = grid[x + vector.x][y + vector.y];
+
+              if (other && other.value === tile.value) {
+                return true; // These two tiles can be merged
+              }
+            }
+          }
+        }
+      }
+    }
+    return false;
   }
 }
