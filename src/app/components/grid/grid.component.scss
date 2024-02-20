@@ -135,7 +135,7 @@ $font-sizes: (
     }
 }
 
-.end-game {
+.game-over {
     position: absolute;
     top: 0;
     left: 0;
@@ -146,6 +146,8 @@ $font-sizes: (
     align-items: center;
     justify-content: center;
     text-align: center;
+    border-radius: $border-radius;
+    animation: spawn $transition-duration-entering $deceleration-curve-timing-function;
 
     .text {
         margin: 0;

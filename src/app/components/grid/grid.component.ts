@@ -77,18 +77,20 @@ export class GridComponent implements OnInit, OnDestroy {
 
   /** apply movement for tiles */
   move(direction: MoveDirection): void {
-    const result = this.gridService.moveTile(this.grid, direction);
-    if (result.changed) {
-      this.grid = result.grid;
-      this.flatGrid = this.gridService.overrideFlatGrid(this.flatGrid, result.movements);
-      this.scoreService.saveBestScore(result.score + this.score);
-      this.checkGameOver();
-      this.changeDetectorRef.detectChanges();
-      setTimeout(() => {
-        this.flatGrid = this.gridService.flatGrid(this.grid);
-        this.score += result.score;
+    if (!this.gameOver) {
+      const result = this.gridService.moveTile(this.grid, direction);
+      if (result.changed) {
+        this.grid = result.grid;
+        this.flatGrid = this.gridService.overrideFlatGrid(this.flatGrid, result.movements);
+        this.scoreService.saveBestScore(result.score + this.score);
         this.changeDetectorRef.detectChanges();
-      }, 250);
+        setTimeout(() => {
+          this.flatGrid = this.gridService.flatGrid(this.grid);
+          this.score += result.score;
+          this.checkGameOver();
+          this.changeDetectorRef.detectChanges();
+        }, 250);
+      }
     }
   }
 
