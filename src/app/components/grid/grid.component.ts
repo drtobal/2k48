@@ -97,18 +97,22 @@ export class GridComponent implements OnInit, OnDestroy {
     switch (event.code) {
       case 'ArrowUp':
       case 'KeyW':
+        event.preventDefault(); // avoid scroll with arrow keys
         this.move('up');
         break;
       case 'ArrowDown':
       case 'KeyS':
+        event.preventDefault();
         this.move('down');
         break;
       case 'ArrowLeft':
       case 'KeyA':
+        event.preventDefault();
         this.move('left');
         break;
       case 'ArrowRight':
       case 'KeyD':
+        event.preventDefault();
         this.move('right');
         break;
     }
