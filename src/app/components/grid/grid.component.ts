@@ -53,18 +53,22 @@ export class GridComponent implements OnInit, OnDestroy {
   /** generate event listeners */
   ngOnInit(): void {
     let touchStart: Coords2D | null = null;
+    let lastTouch: Coords2D | null = null;
 
     const action = (event: KeyboardEvent) => this.action(event);
     const touchstart = (event: TouchEvent) => touchStart = this.getTouchPosition(event);
-    const touchend = (event: TouchEvent) => touchStart = this.touchend(event, touchStart);
+    const touchmove = (event: TouchEvent) => lastTouch = this.getTouchPosition(event);
+    const touchend = () => this.touchend(touchStart, lastTouch);
 
     this.document.addEventListener('keydown', action);
     this.document.addEventListener('touchstart', touchstart);
+    this.document.addEventListener('touchmove', touchmove);
     this.document.addEventListener('touchend', touchend);
 
     this.detachEvents = () => {
       this.document.removeEventListener('keydown', action);
       this.document.removeEventListener('touchstart', touchstart);
+      this.document.removeEventListener('touchmove', touchmove);
       this.document.removeEventListener('touchend', touchend);
     };
   }
@@ -148,8 +152,7 @@ export class GridComponent implements OnInit, OnDestroy {
   }
 
   /** detect touch direction on touch end event */
-  touchend(event: TouchEvent, touchStart: Coords2D | null): null {
-    const touchEnd = this.getTouchPosition(event);
+  touchend(touchStart: Coords2D | null, touchEnd: Coords2D | null): null {
     if (touchStart === null || touchEnd === null) return null;
 
     const diff: Coords2D = { x: touchStart.x - touchEnd.x, y: touchStart.y - touchEnd.y };
