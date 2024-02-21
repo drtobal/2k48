@@ -30,12 +30,21 @@
 </div>
 
 <div class="buttons">
-    <button (click)="move('left')" class="button button-direction">left</button>
+    <button (click)="move('left')" class="button button-direction">
+        <img src="/assets/arrow-fat-left-fill.svg" class="icon" alt="Left" />
+    </button>
     <div class="vertical-buttons">
-        <button (click)="move('up')" class="button button-direction">up</button>
-        <button (click)="move('down')" class="button button-direction">down</button>
+        <button (click)="move('up')" class="button button-direction">
+            <img src="/assets/arrow-fat-up-fill.svg" class="icon" alt="Up" />
+        </button>
+        <button (click)="move('down')" class="button button-direction">
+            <img src="/assets/arrow-fat-down-fill.svg" class="icon" alt="Down" />
+        </button>
     </div>
-    <button (click)="move('right')" class="button button-direction">right</button>
+    <button (click)="move('right')" class="button button-direction">
+        <img src="/assets/arrow-fat-right-fill.svg" class="icon" alt="Right" />
+    </button>
 </div>
 
-<p><small>Use keys up, down, left and right to move tiles, or A, W, S, D.<br />You can also swipe in any direction.</small></p>
+<p><small>Use keys up, down, left and right to move tiles, or A, W, S, D.<br />You can also swipe in any
+        direction.</small></p>

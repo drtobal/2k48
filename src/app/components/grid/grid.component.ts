@@ -50,26 +50,27 @@ export class GridComponent implements OnInit, OnDestroy {
     }
   }
 
+  // TODO: fix swipe control
   /** generate event listeners */
   ngOnInit(): void {
-    let touchStart: Coords2D | null = null;
-    let lastTouch: Coords2D | null = null;
+    // let touchStart: Coords2D | null = null;
+    // let lastTouch: Coords2D | null = null;
 
     const action = (event: KeyboardEvent) => this.action(event);
-    const touchstart = (event: TouchEvent) => touchStart = this.getTouchPosition(event);
-    const touchmove = (event: TouchEvent) => lastTouch = this.getTouchPosition(event);
-    const touchend = () => this.touchend(touchStart, lastTouch);
+    // const touchstart = (event: TouchEvent) => touchStart = this.getTouchPosition(event);
+    // const touchmove = (event: TouchEvent) => lastTouch = this.getTouchPosition(event);
+    // const touchend = () => this.touchend(touchStart, lastTouch);
 
     this.document.addEventListener('keydown', action);
-    this.document.addEventListener('touchstart', touchstart);
-    this.document.addEventListener('touchmove', touchmove);
-    this.document.addEventListener('touchend', touchend);
+    // this.document.addEventListener('touchstart', touchstart);
+    // this.document.addEventListener('touchmove', touchmove);
+    // this.document.addEventListener('touchend', touchend);
 
     this.detachEvents = () => {
       this.document.removeEventListener('keydown', action);
-      this.document.removeEventListener('touchstart', touchstart);
-      this.document.removeEventListener('touchmove', touchmove);
-      this.document.removeEventListener('touchend', touchend);
+      // this.document.removeEventListener('touchstart', touchstart);
+      // this.document.removeEventListener('touchmove', touchmove);
+      // this.document.removeEventListener('touchend', touchend);
     };
   }
 
@@ -147,22 +148,22 @@ export class GridComponent implements OnInit, OnDestroy {
   }
 
   /** get touch position for touch event or null */
-  getTouchPosition(event: TouchEvent): Coords2D | null {
-    return event.touches.length > 0 ? { x: event.touches[0].clientX, y: event.touches[0].clientY } : null;
-  }
+  // getTouchPosition(event: TouchEvent): Coords2D | null {
+  //   return event.touches.length > 0 ? { x: event.touches[0].clientX, y: event.touches[0].clientY } : null;
+  // }
 
   /** detect touch direction on touch end event */
-  touchend(touchStart: Coords2D | null, touchEnd: Coords2D | null): null {
-    if (touchStart === null || touchEnd === null) return null;
+  // touchend(touchStart: Coords2D | null, touchEnd: Coords2D | null): null {
+  //   if (touchStart === null || touchEnd === null) return null;
 
-    const diff: Coords2D = { x: touchStart.x - touchEnd.x, y: touchStart.y - touchEnd.y };
+  //   const diff: Coords2D = { x: touchStart.x - touchEnd.x, y: touchStart.y - touchEnd.y };
 
-    if (Math.abs(diff.x) > Math.abs(diff.y)) {
-      this.move(diff.x > 0 ? 'left' : 'right');
-    } else {
-      this.move(diff.y > 0 ? 'up' : 'down');
-    }
+  //   if (Math.abs(diff.x) > Math.abs(diff.y)) {
+  //     this.move(diff.x > 0 ? 'left' : 'right');
+  //   } else {
+  //     this.move(diff.y > 0 ? 'up' : 'down');
+  //   }
 
-    return null;
-  }
+  //   return null;
+  // }
 }

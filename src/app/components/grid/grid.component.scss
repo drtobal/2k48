@@ -122,8 +122,13 @@ $font-sizes: (
     padding: 0.5rem;
 
     &-direction {
-        width: 3rem;
-        height: 3rem;
+        width: 4rem;
+        height: 4rem;
+
+        .icon {
+            width: 2rem;
+            height: 2rem;
+        }
     }
 }
 
