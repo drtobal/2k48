@@ -5,30 +5,28 @@
     <p>Best Score: {{best | number : '1.0-0'}}</p>
 </div>
 
-<div class="grid-container">
-    <div class="grid-bg">
+<div class="grid-bg">
+    <div class="grid-container">
         @for (column of gridBg; track $index) {
         <div class="column">
             @for (tile of column; track $index) {
-            <div class="tile"></div>
+            <div class="tile mock-tile"></div>
             }
         </div>
         }
-    </div>
 
-    <div class="grid-game">
         @for (tile of flatGrid; track tile.id) {
         <div [ngClass]="{'is-new': tile.isNew}" class="tile position-{{tile.x}}-{{tile.y}} value-{{tile.value}}">
             {{ tile.value }}
         </div>
         }
-    </div>
 
-    @if (gameOver) {
-    <div class="game-over">
-        <p class="text">Game Over</p>
+        @if (gameOver) {
+        <div class="game-over">
+            <p class="text">Game Over</p>
+        </div>
+        }
     </div>
-    }
 </div>
 
 <div class="buttons">
