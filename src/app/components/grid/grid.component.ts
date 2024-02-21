@@ -4,7 +4,7 @@ import { DEFAULT_GRID_SIZE } from '../../constants';
 import { GridService } from '../../services/grid/grid.service';
 import { ScoreService } from '../../services/score/score.service';
 import { UtilService } from '../../services/util/util.service';
-import { Grid, MoveDirection, Tile } from '../../types';
+import { Coords2D, Grid, MoveDirection, Tile } from '../../types';
 
 /** contains the grid for a game and controls */
 @Component({
@@ -52,11 +52,20 @@ export class GridComponent implements OnInit, OnDestroy {
 
   /** generate event listeners */
   ngOnInit(): void {
+    let touchStart: Coords2D | null = null;
+
     const action = (event: KeyboardEvent) => this.action(event);
+    const touchstart = (event: TouchEvent) => touchStart = this.getTouchPosition(event);
+    const touchend = (event: TouchEvent) => touchStart = this.touchend(event, touchStart);
+
     this.document.addEventListener('keydown', action);
+    this.document.addEventListener('touchstart', touchstart);
+    this.document.addEventListener('touchend', touchend);
 
     this.detachEvents = () => {
       this.document.removeEventListener('keydown', action);
+      this.document.removeEventListener('touchstart', touchstart);
+      this.document.removeEventListener('touchend', touchend);
     };
   }
 
@@ -131,5 +140,26 @@ export class GridComponent implements OnInit, OnDestroy {
   /** check if the game is over */
   checkGameOver(): void {
     this.gameOver = this.gridService.freeTiles(this.grid).length === 0 && !this.gridService.hasMergesAvailable(this.grid);
+  }
+
+  /** get touch position for touch event or null */
+  getTouchPosition(event: TouchEvent): Coords2D | null {
+    return event.touches.length > 0 ? { x: event.touches[0].clientX, y: event.touches[0].clientY } : null;
+  }
+
+  /** detect touch direction on touch end event */
+  touchend(event: TouchEvent, touchStart: Coords2D | null): null {
+    const touchEnd = this.getTouchPosition(event);
+    if (touchStart === null || touchEnd === null) return null;
+
+    const diff: Coords2D = { x: touchStart.x - touchEnd.x, y: touchStart.y - touchEnd.y };
+
+    if (Math.abs(diff.x) > Math.abs(diff.y)) {
+      this.move(diff.x > 0 ? 'left' : 'right');
+    } else {
+      this.move(diff.y > 0 ? 'up' : 'down');
+    }
+
+    return null;
   }
 }
